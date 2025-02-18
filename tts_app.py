@@ -6,19 +6,24 @@ import edge_tts
 import os
 from datetime import datetime
 import pygame
+from custom_style import apply_custom_style
+from mutagen.mp3 import MP3
 
 class TTSApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Edge TTS 转换器")
-        self.root.geometry("800x600")
+        self.root.geometry("900x700")
+        
+        # 应用自定义样式
+        self.style = apply_custom_style()
         
         # 配置根窗口的网格权重
         self.root.grid_rowconfigure(0, weight=1)
         self.root.grid_columnconfigure(0, weight=1)
         
         # 创建主框架
-        self.main_frame = ttk.Frame(self.root, padding="10")
+        self.main_frame = ttk.Frame(self.root, padding="20", style="Custom.TFrame")
         self.main_frame.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
         self.main_frame.grid_columnconfigure(0, weight=1)
         
@@ -27,7 +32,7 @@ class TTSApp:
         input_frame.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
         input_frame.grid_columnconfigure(0, weight=1)
         
-        self.text_label = ttk.Label(input_frame, text="输入要转换的文本:")
+        self.text_label = ttk.Label(input_frame, text="输入要转换的文本:", style="Custom.TLabel")
         self.text_label.grid(row=0, column=0, sticky=tk.W, pady=5)
         
         self.text_area = scrolledtext.ScrolledText(input_frame, height=10)
@@ -36,20 +41,20 @@ class TTSApp:
         
         # 字数统计标签
         self.char_count_var = tk.StringVar(value="字数: 0")
-        self.char_count_label = ttk.Label(input_frame, textvariable=self.char_count_var)
+        self.char_count_label = ttk.Label(input_frame, textvariable=self.char_count_var, style="Custom.TLabel")
         self.char_count_label.grid(row=2, column=0, sticky=tk.E, pady=2)
         
         # 语音设置区域
-        settings_frame = ttk.LabelFrame(self.main_frame, text="语音设置", padding="5")
+        settings_frame = ttk.LabelFrame(self.main_frame, text="语音设置", padding="15", style="Custom.TLabelframe")
         settings_frame.grid(row=1, column=0, sticky=(tk.W, tk.E), pady=10)
         settings_frame.grid_columnconfigure(1, weight=1)
         
         # 语音选择
-        self.voice_label = ttk.Label(settings_frame, text="语音:")
+        self.voice_label = ttk.Label(settings_frame, text="语音:", style="Custom.TLabel")
         self.voice_label.grid(row=0, column=0, sticky=tk.W)
         
         self.voice_var = tk.StringVar(value="zh-CN-XiaoxiaoNeural")
-        self.voice_combo = ttk.Combobox(settings_frame, textvariable=self.voice_var)
+        self.voice_combo = ttk.Combobox(settings_frame, textvariable=self.voice_var, style="Custom.TCombobox")
         self.voice_combo['values'] = [
             "zh-CN-XiaoxiaoNeural",
             "zh-CN-YunxiNeural",
@@ -61,49 +66,53 @@ class TTSApp:
         self.voice_combo.grid(row=0, column=1, sticky=(tk.W, tk.E), padx=5)
         
         # 语速调节
-        self.rate_label = ttk.Label(settings_frame, text="语速:")
+        self.rate_label = ttk.Label(settings_frame, text="语速:", style="Custom.TLabel")
         self.rate_label.grid(row=1, column=0, sticky=tk.W)
         
         self.rate_var = tk.StringVar(value="+0%")
-        self.rate_scale = ttk.Scale(settings_frame, from_=-50, to=50, orient=tk.HORIZONTAL,
+        self.rate_scale = ttk.Scale(settings_frame, from_=-50, to=50, orient=tk.HORIZONTAL, style="Custom.Horizontal.TScale",
                                   command=lambda v: self.rate_var.set(f"{int(float(v)):+d}%"))
         self.rate_scale.set(0)
         self.rate_scale.grid(row=1, column=1, sticky=(tk.W, tk.E), padx=5)
         
-        self.rate_value_label = ttk.Label(settings_frame, textvariable=self.rate_var)
+        self.rate_value_label = ttk.Label(settings_frame, textvariable=self.rate_var, style="Custom.TLabel")
         self.rate_value_label.grid(row=1, column=2, sticky=tk.W)
         
         # 语调调节
-        self.pitch_label = ttk.Label(settings_frame, text="语调:")
+        self.pitch_label = ttk.Label(settings_frame, text="语调:", style="Custom.TLabel")
         self.pitch_label.grid(row=2, column=0, sticky=tk.W)
         
         self.pitch_var = tk.StringVar(value="+0Hz")
-        self.pitch_scale = ttk.Scale(settings_frame, from_=-50, to=50, orient=tk.HORIZONTAL,
+        self.pitch_scale = ttk.Scale(settings_frame, from_=-50, to=50, orient=tk.HORIZONTAL, style="Custom.Horizontal.TScale",
                                    command=lambda v: self.pitch_var.set(f"{int(float(v)):+d}Hz"))
         self.pitch_scale.set(0)
         self.pitch_scale.grid(row=2, column=1, sticky=(tk.W, tk.E), padx=5)
         
-        self.pitch_value_label = ttk.Label(settings_frame, textvariable=self.pitch_var)
+        self.pitch_value_label = ttk.Label(settings_frame, textvariable=self.pitch_var, style="Custom.TLabel")
         self.pitch_value_label.grid(row=2, column=2, sticky=tk.W)
         
         # 转换按钮
-        self.convert_button = ttk.Button(self.main_frame, text="开始转换", command=self.start_conversion)
+        self.convert_button = ttk.Button(self.main_frame, text="开始转换", command=self.start_conversion, style="Custom.TButton")
         self.convert_button.grid(row=2, column=0, pady=10)
         
         # 状态标签
         self.status_var = tk.StringVar(value="就绪")
-        self.status_label = ttk.Label(self.main_frame, textvariable=self.status_var)
+        self.status_label = ttk.Label(self.main_frame, textvariable=self.status_var, style="Custom.TLabel")
         self.status_label.grid(row=3, column=0)
         
         # 文件列表区域
-        files_frame = ttk.LabelFrame(self.main_frame, text="生成的文件", padding="5")
+        files_frame = ttk.LabelFrame(self.main_frame, text="生成的文件", padding="15", style="Custom.TLabelframe")
         files_frame.grid(row=4, column=0, sticky=(tk.W, tk.E, tk.N, tk.S), pady=10)
         files_frame.grid_columnconfigure(0, weight=1)
         
         # 创建文件列表
-        self.files_tree = ttk.Treeview(files_frame, columns=("文件名",), show="headings", height=5)
-        self.files_tree.heading("文件名", text="文件名")
-        self.files_tree.column("文件名", width=600)
+        self.files_tree = ttk.Treeview(files_frame, columns=("文件名", "文件大小", "持续时间"), show="headings", height=6, style="Custom.Treeview")
+        self.files_tree.heading("文件名", text="文件名", anchor="w")
+        self.files_tree.heading("文件大小", text="文件大小(KB)", anchor="w")
+        self.files_tree.heading("持续时间", text="持续时间", anchor="w")
+        self.files_tree.column("文件名", width=400, anchor="w")
+        self.files_tree.column("文件大小", width=100, anchor="w")
+        self.files_tree.column("持续时间", width=100, anchor="w")
         self.files_tree.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
         
         # 创建操作按钮框架
@@ -111,17 +120,17 @@ class TTSApp:
         buttons_frame.grid(row=1, column=0, sticky=(tk.W, tk.E), pady=5)
         
         # 添加操作按钮
-        self.play_button = ttk.Button(buttons_frame, text="播放", state="disabled", command=self.play_selected)
+        self.play_button = ttk.Button(buttons_frame, text="播放", state="disabled", command=self.play_selected, style="Custom.TButton")
         self.play_button.pack(side=tk.LEFT, padx=5)
         
-        self.locate_button = ttk.Button(buttons_frame, text="定位", state="disabled", command=self.locate_selected)
+        self.locate_button = ttk.Button(buttons_frame, text="定位", state="disabled", command=self.locate_selected, style="Custom.TButton")
         self.locate_button.pack(side=tk.LEFT, padx=5)
         
-        self.delete_button = ttk.Button(buttons_frame, text="删除", state="disabled", command=self.delete_selected)
+        self.delete_button = ttk.Button(buttons_frame, text="删除", state="disabled", command=self.delete_selected, style="Custom.TButton")
         self.delete_button.pack(side=tk.LEFT, padx=5)
         
         # 文件列表滚动条
-        scrollbar = ttk.Scrollbar(files_frame, orient=tk.VERTICAL, command=self.files_tree.yview)
+        scrollbar = ttk.Scrollbar(files_frame, orient=tk.VERTICAL, command=self.files_tree.yview, style="Custom.Vertical.TScrollbar")
         scrollbar.grid(row=0, column=1, sticky=(tk.N, tk.S))
         self.files_tree.configure(yscrollcommand=scrollbar.set)
         
@@ -159,7 +168,21 @@ class TTSApp:
         # 获取所有mp3文件
         mp3_files = [f for f in os.listdir() if f.endswith('.mp3')]
         for file in sorted(mp3_files, reverse=True):
-            self.files_tree.insert("", tk.END, values=(file,))
+            # 获取文件大小
+            file_size = round(os.path.getsize(file) / 1024, 2)  # 转换为KB
+            
+            # 获取音频持续时间
+            try:
+                audio = MP3(file)
+                duration = audio.info.length
+                hours = int(duration // 3600)
+                minutes = int((duration % 3600) // 60)
+                seconds = int(duration % 60)
+                duration_str = f"{hours:02d}:{minutes:02d}:{seconds:02d}"
+            except:
+                duration_str = "00:00:00"
+            
+            self.files_tree.insert("", tk.END, values=(file, file_size, duration_str))
     
     def play_selected(self):
         selected = self.files_tree.selection()
