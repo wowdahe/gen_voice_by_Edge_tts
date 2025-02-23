@@ -65,13 +65,19 @@
 
 ### 示例音频
 
-由于音频文件较大，我们将示例音频文件托管在GitHub上。您可以通过以下链接下载示例音频：
+您可以直接在浏览器中试听示例音频：
 
-[点击下载示例音频](https://github.com/wowdahe/gen_voice_by_Edge_tts/raw/main/examples/demo.mp3)
+<audio controls>
+  <source src="https://raw.githubusercontent.com/wowdahe/gen_voice_by_Edge_tts/main/examples/demo.mp3" type="audio/mpeg">
+  您的浏览器不支持音频播放，请尝试下载后播放。
+</audio>
 
-注意：如果链接无法访问，请确保您已经：
-1. 将项目克隆到本地
-2. 运行程序生成自己的音频文件
+如果您想下载示例音频，可以通过以下链接：
+[下载示例音频](https://github.com/wowdahe/gen_voice_by_Edge_tts/raw/main/examples/demo.mp3)
+
+注意：如果音频无法播放或下载，请确保：
+1. 您的网络可以访问GitHub
+2. 或者将项目克隆到本地后使用程序生成自己的音频文件
 
 
 ## 注意事项
