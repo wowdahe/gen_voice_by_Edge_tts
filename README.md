@@ -65,7 +65,12 @@
 
 ### 示例音频
 
-[点击下载示例音频](https://github.com/dahebro/gen_voice_by_Edge_tts/raw/main/examples/output_20250223_211304.mp3)
+### 在线试听
+
+<audio controls>
+  <source src="https://github.com/dahebro/gen_voice_by_Edge_tts/raw/main/examples/output_20250223_211304.mp3" type="audio/mpeg">
+  您的浏览器不支持音频播放器。
+</audio>
 
 ## 注意事项
 
