@@ -19,6 +19,7 @@ env/
 
 # Generated files
 *.mp3
+!examples/demo.mp3
 
 # System files
 .DS_Store
