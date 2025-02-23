@@ -67,10 +67,33 @@
 
 ### 在线试听
 
-<audio controls preload="none">
+<!-- 方案1：HTML5 Audio标签 -->
+<audio id="audioPlayer" controls preload="none" controlsList="nodownload">
   <source src="https://raw.githubusercontent.com/dahebro/gen_voice_by_Edge_tts/main/examples/output_20250223_211304.mp3" type="audio/mpeg">
-  <p>您的浏览器不支持HTML5音频播放，请<a href="https://raw.githubusercontent.com/dahebro/gen_voice_by_Edge_tts/main/examples/output_20250223_211304.mp3">点击此处</a>下载音频文件。</p>
 </audio>
+
+<!-- 方案2：使用第三方播放器 -->
+<div id="aplayer"></div>
+
+<!-- 方案3：直接下载链接 -->
+<p>如果无法直接播放，请<a href="https://raw.githubusercontent.com/dahebro/gen_voice_by_Edge_tts/main/examples/output_20250223_211304.mp3" download="示例音频.mp3">点击此处下载</a>音频文件。</p>
+
+<!-- 引入APlayer播放器 -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css">
+<script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
+
+<script>
+  // 初始化APlayer播放器
+  const ap = new APlayer({
+    container: document.getElementById('aplayer'),
+    audio: [{
+      name: '示例音频',
+      artist: 'Edge TTS',
+      url: 'https://raw.githubusercontent.com/dahebro/gen_voice_by_Edge_tts/main/examples/output_20250223_211304.mp3',
+      cover: 'https://raw.githubusercontent.com/dahebro/gen_voice_by_Edge_tts/main/images/interface.png'
+    }]
+  });
+</script>
 
 ## 注意事项
 
